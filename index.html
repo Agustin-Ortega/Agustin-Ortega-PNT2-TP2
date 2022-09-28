@@ -14,33 +14,98 @@
 
 
 <div class="container-fluid mt-3" id="app">
-    <input type="text" class="form-control" v-model="criterioDeBusqueda"
-        placeholder="Ingresar un criterio de busqueda...">
-    <br>
-    <div class="card-deck m-0">
-        <div class="row">
-            <div class="col" v-for="persona in personasFiltradas">
-                <div class="card mb-3">
-                    <div class="card-body">
+    <div class="jumbotron">
+
+
+        <input type="text" id="input1" class="form-control" v-model="criterioDeBusquedaNombres" placeholder="Ingresar el nombre y apellido...">
+        <br>{{criterioDeBusquedaNombres}}
+
+        <input type="text" id="input2" class="form-control" v-model="criterioDeBusquedaDni" placeholder="Ingresar el Dni...">
+        {{criterioDeBusquedaDni}}
+        <br>
+        <hr>
+    
+        <!-- <div class="card-deck m-0">
+            <div class="row">
+                
+                <div class="col" v-for="persona in filtroNombre" v-if="criterioDeBusquedaNombres!=''">
+                    <div class="card mb-3 media alert alert-info ">
+                        <div class="card-body">
                         <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
-                        <p class="card-text">dni {{persona.dni}}</p>
+                        <p class="card-text">DNI {{persona.dni}}</p>
                         <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
                     </div>
                 </div>
             </div>
+        </div> -->
+    
+
+        <div class="card-deck m-0">
+            <div class="row">
+
+                <div class="col" v-for="persona in filtroNombre" v-if="criterioDeBusquedaNombres!=''">
+                    <div class="card mb-3 media alert alert-info ">
+                        <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">DNI {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                    </div>
+            </div v-else>
+            <div class="col" v-for="persona in filtroDni" v-if="criterioDeBusquedaNombres==''">
+                <div class="card mb-3 media alert alert-info ">
+                    <div class="card-body">
+                    <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                    <p class="card-text">DNI {{persona.dni}}</p>
+                    <a href="#" class="card-link">{{persona.correo}}</a>
+                </div>
+                </div>
+                </div>
+            </div>
         </div>
+
+        <br>
+        <hr>
+        <!-- <button class="btn btn-warning my-3" @click="mostrar2=!mostrar2">
+            {{ mostrar? 'Ocultar' : 'Mostrar' }}
+         </button> -->
+
+         <!-- <p v-if="mostrar2" class="alert alert-warning my-3">
+            Error cantidad de caracteres insuficientes
+         </p>
+         <p v-else class="alert alert-danger">Ingreso valido</p> -->
+
+        <!-- <h4 class="alert alert-danger">
+            {{ mostrarMsj }}
+        </h4> -->
+
+
+        <h4 v-if="mostrarMsj" class="alert alert-danger my-3">
+            Error cantidad de caracteres insuficientes
+        </h4>
+        <h4 v-else class="alert alert-success">Ingreso valido</h4>
+
     </div>
+</div>
 
 </div>
 
 </html>
 
 <script>
+    let input = document.getElementById("#input1");
+    if(this.input != ''){this.mostrar=true}
+    else{this.mostrar=false}
     new Vue({
         el: '#app',
         data: {
-            criterioDeBusqueda: '',
+            mostrar:false,
+            mostrar2:true,
+            criterioDeBusquedaNombres: '',
             //Aquí, en este array es donde tienen que agregar su información
+            criterioDeBusquedaDni:'',
+
             personas: [
                 {
                     nombre: "Daniel",
@@ -49,26 +114,82 @@
                     dni: "20442873"
                 },
                 {
-                    nombre: "...",
-                    apellido: "...",
-                    correo: "...",
-                    dni: "..."
+                    nombre: "Agustin",
+                    apellido: "Ortega",
+                    correo: "lpk900@gmail.com",
+                    dni: "42076179"
+                },
+                {
+                    nombre: "Max",
+                    apellido: "Vertappen",
+                    correo: "max01@gmail.com",
+                    dni: "43678953"
+                },
+                {
+                    nombre: "Lewis",
+                    apellido: "Hamilton",
+                    correo: "lewis02@gmail.com",
+                    dni: "44772652"
                 },
             ]
 
         },
         computed: {
-            personasFiltradas() {
+            // personasFiltradas() {
+                
+            //     return this.personas.filter((persona) => {
+            //         let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
+            //         return registroCompleto.toLowerCase().includes(this.criterioDeBusquedaNombres.toLowerCase())
+            //     });
+            // },
+
+            filtroDni() {
                 return this.personas.filter((persona) => {
-                    let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
-                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
+                    let registroCompleto = `${persona.dni}`
+                    return registroCompleto.toLowerCase().trim().includes(this.criterioDeBusquedaDni.toLowerCase())
+                    
                 });
+            },
+
+            filtroNombre() {
+                return this.personas.filter((persona) => {
+                    let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni}`
+                    return registroCompleto.toLowerCase().includes(this.criterioDeBusquedaNombres.toLowerCase())
+                    
+                })
+            },
+
+            // mostrarMsj(){
+            //     if(this.criterioDeBusquedaNombres.length < 3){
+            //         return "Error cantidad de caracteres insuficientes"
+            //     }
+            //     else{
+            //         return "Ingreso valido"
+            //     }
+            // }
+            mostrarMsj(){
+                if(this.criterioDeBusquedaNombres.length < 3){
+                    return true
+                }
+                else{
+                    return false
+                }
             }
-        },
+
+            },
+    
         methods: {
+            filtro() {
+                if (this.input.value == ' ') { return filtroDni() }
+                else { filtroNombre() }
+            },
             getNombreCompleto(persona) {
                 return `${persona.nombre} ${persona.apellido}`
-            }
+            },
+            getDni(persona) {
+                return `${persona.dni} `
+            },
+            
         }
     });
 </script>
